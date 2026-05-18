@@ -1,19 +1,29 @@
 import ShortUrl from "../models/shortUrl.model.js";
 import { generteNanoId } from "../utils/generteNanoId.js";
 
-export const saveShortUrl = async (fullUrl, shortUrl) => {
+export const saveShortUrl = async ({
+  fullUrl,
+  shortUrl,
+  userId,
+  custom = false,
+}) => {
   return await ShortUrl.create({
     fullUrl,
     shortUrl,
+    userId,
+    custom,
   });
 };
 export const getFullUrl = async (shortUrl) => {
-  console.log("time2", shortUrl);
   const urlData = await ShortUrl.findOneAndUpdate(
     { shortUrl },
     { $inc: { clicks: 1 } },
   );
-  console.log("time3", urlData);
+
+  return urlData ? urlData.fullUrl : null;
+};
+export const findUrl = async (shortUrl) => {
+  const urlData = await ShortUrl.findOne({ shortUrl });
 
   return urlData ? urlData.fullUrl : null;
 };

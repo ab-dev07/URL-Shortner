@@ -1,25 +1,29 @@
-import { deleteURLFromDB, getAllUrls, getFullUrl } from "../dao/shortUrl.dao.js";
+import {
+  deleteURLFromDB,
+  getAllUrls,
+  getFullUrl,
+} from "../dao/shortUrl.dao.js";
 import { createShortUrlWithoutUser } from "../services/shortUrl.service.js";
 
 export const createShortUrl = async (req, res) => {
-  console.log(req.body);
   const { fullUrl } = req.body;
   const shortUrl = await createShortUrlWithoutUser(fullUrl);
   res.json({ shortUrl });
 };
 export const createCustomUrl = async (req, res) => {
-  console.log(req.body);
+  const user = req.user;
   const { fullUrl, slug } = req.body;
-  const shortUrl = await createShortUrlWithoutUser(fullUrl, slug);
+  const shortUrl = await createShortUrlWithoutUser(fullUrl, slug, user._id);
+  if (!shortUrl)
+    return res.status(400).json({
+      message: "Custom slug already exists. Please choose a different one.",
+    });
   res.json({ shortUrl });
 };
 export const redirectFromShortUrl = async (req, res) => {
   const { shortUrl } = req.params;
-  console.log("time", shortUrl);
   const fullUrl = await getFullUrl(shortUrl);
-  console.log("fullUrl:", fullUrl);
   if (fullUrl) {
-    console.log("redirecting....");
     res.redirect(fullUrl);
   }
 };

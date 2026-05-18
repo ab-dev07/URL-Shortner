@@ -31,7 +31,7 @@ export default function Analytics({
   const [filter, setFilter] = useState("all"); // all | custom | active
 
   const handleDelete = (id) => {
-    setLinks((prev) => prev.filter((l) => l.id !== id));
+    setLinks((prev) => prev.filter((l) => l._id !== id));
   };
 
   const filtered = links.filter((l) => {
@@ -189,7 +189,7 @@ export default function Analytics({
         ) : (
           <div className="flex flex-col gap-3">
             {filtered.map((link) => (
-              <LinkRow key={link.id} link={link} onDelete={handleDelete} />
+              <LinkRow key={link._id} link={link} onDelete={handleDelete} />
             ))}
           </div>
         )}

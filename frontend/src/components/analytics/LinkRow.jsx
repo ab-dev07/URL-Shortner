@@ -9,9 +9,9 @@ export default function LinkRow({ link, onDelete }) {
 
   const handleDelete = () => {
     setDeleting(true);
-    deleteLink(link.id)
-      .then(() => onDelete(link.id))
-      .catch(() => setDeleting(false));
+    deleteLink(link.shortUrl)
+      .then(() => onDelete(link._id))
+      .finally(() => setDeleting(false));
   };
 
   const barWidth = Math.min(100, (link.clicks / (link.maxClicks || 500)) * 100);
@@ -22,7 +22,7 @@ export default function LinkRow({ link, onDelete }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="font-mono font-semibold text-sm text-gray-900">
-              {link.shortUrl}
+              {`${import.meta.env.VITE_BACKEND_URL}/${link.shortUrl}`}
             </span>
             {link.custom && (
               <span className="text-xs px-1.5 py-0.5 rounded-full bg-violet-50 text-violet-500 border border-violet-200 shrink-0">
@@ -30,7 +30,7 @@ export default function LinkRow({ link, onDelete }) {
               </span>
             )}
             <a
-              href={`https://${link.shortUrl}`}
+              href={`${import.meta.env.VITE_BACKEND_URL}/${link.shortUrl}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-gray-500 transition-colors"
@@ -61,7 +61,9 @@ export default function LinkRow({ link, onDelete }) {
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0 mt-0.5">
-          <CopyButton textToCopy={link.shortUrl} />
+          <CopyButton
+            textToCopy={`${import.meta.env.VITE_BACKEND_URL}/${link.shortUrl}`}
+          />
           <button
             onClick={handleDelete}
             disabled={deleting}

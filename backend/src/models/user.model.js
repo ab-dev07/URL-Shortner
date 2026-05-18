@@ -1,0 +1,16 @@
+import mongoos from "mongoose";
+
+const userSchema = new mongoos.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+});
+
+const User = mongoos.model("User", userSchema);
+export default User;

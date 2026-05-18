@@ -4,7 +4,10 @@ import ShortUrl from "./pages/ShortUrl.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Modal from "./components/Modal.jsx";
+import SkeletonLoader from "./components/SkeletonLoader.jsx";
 import { DUMMY_LINKS } from "./constants/dummyLinks.js";
+import { useEffect } from "react";
+import { getAllUrls } from "./api/shortUrl.api.js";
 
 function App() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -96,15 +99,21 @@ function App() {
       createdAt: "2025-03-18",
     },
   ];
-
+  const [data, setData] = useState([]);
   const closeModal = () => setIsCreateModalOpen(false);
-
+  useEffect(() => {
+    getAllUrls()
+      .then((res) => {
+        console.log(res.urls);
+        setData(res.urls);
+        //this data has array and i already tested it
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  if (data.length === 0) return <SkeletonLoader />;
   return (
     <>
-      <Analytics
-        links={DUMMY_LINKS}
-        onCreateNew={() => setIsCreateModalOpen(true)}
-      />
+      <Analytics links={data} onCreateNew={() => setIsCreateModalOpen(true)} />
 
       <Modal
         open={isCreateModalOpen}
